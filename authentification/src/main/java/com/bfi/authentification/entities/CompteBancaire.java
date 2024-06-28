@@ -2,9 +2,13 @@ package com.bfi.authentification.entities;
 
 import com.bfi.authentification.entities.enums.TCompte;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 @Entity
+@Getter
+@Setter
 public class CompteBancaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
