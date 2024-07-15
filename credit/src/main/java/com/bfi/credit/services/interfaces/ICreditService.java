@@ -10,4 +10,5 @@ public interface ICreditService {
     void deleteCredit(Long id);
     Credit getCreditById(Long id);
     List<Credit> getAllCredits();
+    List<Credit> findAllCreditsByUser(Long idUser);
 }

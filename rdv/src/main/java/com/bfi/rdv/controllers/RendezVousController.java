@@ -3,12 +3,13 @@ package com.bfi.rdv.controllers;
 import com.bfi.rdv.entities.RendezVous;
 import com.bfi.rdv.services.interfaces.IRendezVousService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rendezvous")
+@RequestMapping("/rdv")
 public class RendezVousController {
 
     @Autowired
@@ -21,7 +22,6 @@ public class RendezVousController {
 
     @PutMapping("/{id}")
     public RendezVous updateRendezVous(@PathVariable Long id, @RequestBody RendezVous rendezVous) {
-        rendezVous.setIdRdv(id);
         return rendezVousService.updateRendezVous(rendezVous);
     }
 
@@ -38,5 +38,13 @@ public class RendezVousController {
     @GetMapping
     public List<RendezVous> getAllRendezVous() {
         return rendezVousService.getAllRendezVous();
+    }
+
+
+    @GetMapping("/user/{idUser}")
+    public ResponseEntity<List<RendezVous>> findAllRdvs(
+            @PathVariable("idUser") Long idUser
+    ) {
+        return ResponseEntity.ok(rendezVousService.findAllRendezVousByUser(idUser));
     }
 }

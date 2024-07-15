@@ -30,6 +30,11 @@ public class Credit implements Serializable {
     Integer dureeCredit;
     @Enumerated(EnumType.STRING)
     TypeUnite typeUnite;
+    Float interet;
+
+    Long idUser;
+
+
 
     @OneToOne
     ContratCredit contratCredit;

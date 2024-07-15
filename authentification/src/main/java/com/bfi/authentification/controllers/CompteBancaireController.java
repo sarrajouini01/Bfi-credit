@@ -21,7 +21,6 @@ public class CompteBancaireController {
 
     @PutMapping("/{id}")
     public CompteBancaire updateCompteBancaire(@PathVariable Long id, @RequestBody CompteBancaire compteBancaire) {
-        compteBancaire.setIdCompte(id);
         return compteBancaireService.updateCompteBancaire(compteBancaire);
     }
 

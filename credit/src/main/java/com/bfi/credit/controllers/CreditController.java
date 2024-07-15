@@ -3,18 +3,19 @@ package com.bfi.credit.controllers;
 import com.bfi.credit.entities.Credit;
 import com.bfi.credit.services.interfaces.ICreditService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/credits")
+@RequestMapping("/credit")
 public class CreditController {
 
     @Autowired
     private ICreditService creditService;
 
-    @PostMapping
+    @PostMapping("/add")
     public Credit createCredit(@RequestBody Credit credit) {
         return creditService.saveCredit(credit);
     }
@@ -38,5 +39,12 @@ public class CreditController {
     @GetMapping
     public List<Credit> getAllCredits() {
         return creditService.getAllCredits();
+    }
+
+    @GetMapping("/user/{idUser}")
+    public ResponseEntity<List<Credit>> findAllCredits(
+            @PathVariable("idUser") Long idUser
+    ) {
+        return ResponseEntity.ok(creditService.findAllCreditsByUser(idUser));
     }
 }

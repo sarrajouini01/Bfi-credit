@@ -2,14 +2,16 @@ package com.bfi.authentification.entities;
 
 import com.bfi.authentification.entities.enums.TCompte;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 @Entity
 @Getter
 @Setter
-public class CompteBancaire {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CompteBancaire implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCompte;
@@ -19,5 +21,5 @@ public class CompteBancaire {
     @Enumerated(EnumType.STRING)
     private TCompte typeCompte;
     @ManyToOne
-    private Client client;
+    private User client;
 }

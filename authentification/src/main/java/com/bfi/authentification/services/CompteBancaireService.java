@@ -3,16 +3,20 @@ package com.bfi.authentification.services;
 import com.bfi.authentification.entities.CompteBancaire;
 import com.bfi.authentification.repositories.CompteBancaireRepository;
 import com.bfi.authentification.services.interfaces.ICompteBancaireService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Service
+@RequestMapping("/compteBancaire")
+@RequiredArgsConstructor
 public class CompteBancaireService implements ICompteBancaireService {
 
     @Autowired
-    private CompteBancaireRepository compteBancaireRepository;
+    private final CompteBancaireRepository compteBancaireRepository;
 
     @Override
     public CompteBancaire saveCompteBancaire(CompteBancaire compteBancaire) {

@@ -3,12 +3,18 @@ package com.bfi.credit.services;
 import com.bfi.credit.entities.DocAttache;
 import com.bfi.credit.repositories.DocAttacheRepository;
 import com.bfi.credit.services.interfaces.IDocAttacheService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.print.Doc;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequestMapping("/docattache")
+@RequiredArgsConstructor
 public class DocAttacheService implements IDocAttacheService {
 
     @Autowired
@@ -38,4 +44,28 @@ public class DocAttacheService implements IDocAttacheService {
     public List<DocAttache> getAllDocAttaches() {
         return docAttacheRepository.findAll();
     }
+
+
+
+
+        @Override
+        public Boolean deletePieceJointe(Long idP) {
+            Optional<DocAttache> PieceJointeOptional = docAttacheRepository.findById(idP);
+            if (PieceJointeOptional.isPresent()) {
+                docAttacheRepository.deleteById(idP);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public List<DocAttache> getAllPieceJointe() {
+            return (List<DocAttache>) docAttacheRepository.findAll();
+        }
+
+        @Override
+        public DocAttache getPieceJointeById(Long idP) {
+            return docAttacheRepository.findById(idP).orElse(null);
+        }
 }

@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,4 +24,6 @@ public class ContratCredit implements Serializable {
     Date dateC;
     @OneToOne
     Credit credit;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="contratCredit")
+    private Set<Echeance> echeances;
 }

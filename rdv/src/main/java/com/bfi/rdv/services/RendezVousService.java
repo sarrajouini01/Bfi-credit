@@ -3,16 +3,20 @@ package com.bfi.rdv.services;
 import com.bfi.rdv.entities.RendezVous;
 import com.bfi.rdv.repositories.RendezVousRepository;
 import com.bfi.rdv.services.interfaces.IRendezVousService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Service
+@RequestMapping("/rdv")
+@RequiredArgsConstructor
 public class RendezVousService implements IRendezVousService {
 
     @Autowired
-    private RendezVousRepository rendezVousRepository;
+    private final RendezVousRepository rendezVousRepository;
 
     @Override
     public RendezVous saveRendezVous(RendezVous rendezVous) {
@@ -38,4 +42,11 @@ public class RendezVousService implements IRendezVousService {
     public List<RendezVous> getAllRendezVous() {
         return rendezVousRepository.findAll();
     }
+
+
+    @Override
+    public List<RendezVous> findAllRendezVousByUser(Long idUser) {
+        return rendezVousRepository.findAllByIdUser(idUser);
+    }
 }
+

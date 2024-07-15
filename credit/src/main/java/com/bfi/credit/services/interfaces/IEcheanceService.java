@@ -3,6 +3,7 @@ package com.bfi.credit.services.interfaces;
 import com.bfi.credit.entities.Echeance;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IEcheanceService {
     Echeance saveEcheance(Echeance echeance);
@@ -10,4 +11,5 @@ public interface IEcheanceService {
     void deleteEcheance(Long id);
     Echeance getEcheanceById(Long id);
     List<Echeance> getAllEcheances();
-}
+
+    }

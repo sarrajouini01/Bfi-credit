@@ -22,6 +22,7 @@ public class Echeance implements Serializable {
     Long idE;
     Date datePaiement;
     Float montantEcheance;
+    Float mensualite;
     Float interetsPayes;
     Float capitalRembourse;
     Float capitalRestantDu;

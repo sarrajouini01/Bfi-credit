@@ -38,4 +38,10 @@ public class ReclamationService implements IReclamationService {
     public List<Reclamation> getAllReclamations() {
         return reclamationRepository.findAll();
     }
+
+    @Override
+    public List<Reclamation> findAllReclamationByUser(Long idUser) {
+        return reclamationRepository.findAllByIdUser(idUser);
+    }
+
 }

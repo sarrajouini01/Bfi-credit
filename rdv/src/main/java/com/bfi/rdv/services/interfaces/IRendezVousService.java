@@ -10,4 +10,5 @@ public interface IRendezVousService {
     void deleteRendezVous(Long id);
     RendezVous getRendezVousById(Long id);
     List<RendezVous> getAllRendezVous();
+     List<RendezVous> findAllRendezVousByUser(Long idU);
 }

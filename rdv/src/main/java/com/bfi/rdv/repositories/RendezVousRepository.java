@@ -2,7 +2,11 @@ package com.bfi.rdv.repositories;
 
 import com.bfi.rdv.entities.RendezVous;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+@Repository
 public interface RendezVousRepository extends JpaRepository<RendezVous, Long> {
-    // Additional query methods can be defined here if needed
+    List<RendezVous> findAllByIdUser(Long idUser);
+
 }

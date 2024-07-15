@@ -1,42 +1,121 @@
 package com.bfi.credit.controllers;
-
+import com.bfi.credit.entities.Credit;
+import com.bfi.credit.entities.Echeance;
 import com.bfi.credit.entities.ContratCredit;
 import com.bfi.credit.services.interfaces.IContratCreditService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
-@RequestMapping("/api/contrats")
+@RequestMapping("/contrat")
+@RequiredArgsConstructor
 public class ContratCreditController {
 
     @Autowired
     private IContratCreditService contratCreditService;
 
-    @PostMapping
-    public ContratCredit createContratCredit(@RequestBody ContratCredit contratCredit) {
-        return contratCreditService.saveContratCredit(contratCredit);
+
+    @PostMapping("/creer-et-affecter/{id}")
+    public ResponseEntity<ContratCredit> creerContratEtAffecterADemande(
+            @PathVariable("id") Long id,
+            @RequestBody ContratCredit contratCredit) {
+
+        ContratCredit contratSaved = contratCreditService.creerContratEtAffecterADemande(id, contratCredit);
+
+        return ResponseEntity.ok(contratSaved);
     }
 
-    @PutMapping("/{id}")
-    public ContratCredit updateContratCredit(@PathVariable Long id, @RequestBody ContratCredit contratCredit) {
-        contratCredit.setIdC(id);
+    @PutMapping("/update")
+    public ContratCredit updateContratCredit(@RequestBody ContratCredit contratCredit) {
+
         return contratCreditService.updateContratCredit(contratCredit);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteContratCredit(@PathVariable Long id) {
-        contratCreditService.deleteContratCredit(id);
+
+    @DeleteMapping("/delete/{idC}")
+    public ResponseEntity<String> deleteContratCredit(@PathVariable("idC") Long idC) {
+        boolean deleted = contratCreditService.deleteContratCredit(idC);
+        if (deleted) {
+            return ResponseEntity.ok("ContratCredit deleted!");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ContratCredit with ID " + idC + " does not exist.");
+        }
     }
 
-    @GetMapping("/{id}")
-    public ContratCredit getContratCreditById(@PathVariable Long id) {
-        return contratCreditService.getContratCreditById(id);
+    @GetMapping("/get/{idC}")
+    public ContratCredit getContratCreditById(@PathVariable("idC") Long idC) {
+        return contratCreditService.getContratCreditById(idC);
     }
 
-    @GetMapping
-    public List<ContratCredit> getAllContratCredits() {
-        return contratCreditService.getAllContratCredits();
+
+    @GetMapping("/getAllContratCredit")
+    public List<ContratCredit> getAllContratCredit() {
+        return ResponseEntity.ok().body(contratCreditService.getAllContratCredit()).getBody();
+
     }
-}
+
+
+    @GetMapping("/{idC}")
+    public ResponseEntity<byte[]> generateContratPdf(@PathVariable("idC") Long idC) {
+        try {
+            byte[] pdfBytes = contratCreditService.generateContratPdf(idC);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "contrat.pdf");
+            headers.setContentLength(pdfBytes.length);
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/process")
+    public ResponseEntity<String> processDocument(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam Map<String, String> replacementMap) {
+        try {
+            // Appel à votre service pour traiter le document
+            InputStream inputStream = file.getInputStream();
+            String outputPdfPath = "output_document.pdf";
+            contratCreditService.processWordDocument(inputStream, outputPdfPath, replacementMap);
+            return ResponseEntity.ok("Document processed successfully. Output PDF saved at " + outputPdfPath);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error processing document: " + e.getMessage());
+        }
+    }
+
+
+   /* @PostMapping("/{contratId}/echeances/{echeanceId}")
+    public ResponseEntity<ContratCredit> assignEcheanceToContrat(
+            @PathVariable Long contratId,
+            @PathVariable Long echeanceId) {
+        ContratCredit contratCredit = iContratCreditService.assignEcheanceToContrat(contratId, echeanceId);
+        return ResponseEntity.ok().body(contratCredit);
+    }*/
+
+    @PostMapping("/{idC}/generer-echeances")
+    public ResponseEntity<Set<Echeance>> genererEtAssignerEcheances(
+            @PathVariable Long idC,
+            @RequestParam float montant,
+            @RequestParam int duree,
+            @RequestParam float interet){
+
+        Set<Echeance> echeances = contratCreditService.genererEcheances(montant, duree, interet, idC);
+
+        return ResponseEntity.ok().body(echeances);
+    }}
